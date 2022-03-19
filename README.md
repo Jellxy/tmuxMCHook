@@ -32,6 +32,8 @@ Running the same command twice in a row will cause the program to get stuck in a
 
 Lack of features.
 
+Constant stream of commands makes the console somewhat unusable.
+
 
 ## Planned Features:
 
