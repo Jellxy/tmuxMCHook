@@ -43,8 +43,6 @@ Subtitle support.
 
 Tellraw function.
 
-Summon function.
-
 Setblock function.
 
 Function to handle entity and block data (like get_player_pos(), but more extensive).
