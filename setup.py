@@ -7,5 +7,5 @@ setup(
     author = 'Jellxy',
     author_email = 'jellxyr@gmail.com',
     url = 'https://github.com/Jellxy/tmuxMCHook',
-    packages = ['tmuxMCHook']
+    py_modules = ['tmuxMCHook']
 )
