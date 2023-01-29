@@ -1,35 +1,34 @@
-import json, os
-from time import sleep
+import os, subprocess
+
+VERSION = '0.1.1'
 
 class ServerHook:
-	def __init__(self, tmux_name, log_path):
+	def __init__(self, tmux_name):
 		self.tmux_name = tmux_name
-		self.log_path = log_path
 
 
-	def get_log_file(self, lines=1):
-		with open(self.log_path, 'r') as logfile:
-			logfile_contents = logfile.read().split('\n')
-			logfile.close()
-		if lines > 1:
-			return logfile_contents[-(lines + 1):-2]
-		else:
-			return logfile_contents[-2]
-
+	def get_log(self, lines = 1):
+		if lines > 28:
+			raise ValueError('Can only print 28 or less lines of the log.')
+		log = subprocess.check_output(['tmux','capture-pane','-S',str(28 - lines),'-p','-t',self.tmux_name]).decode('utf-8').split('\n')
+		while '' in log:
+			log.remove('')
+		return log
+		
 	def run_command(self, command):
 		command = ' Space '.join(command.split(' '))
-		prev_output = self.get_log_file()
+		prev_output = self.get_log()
 		os.system(f'tmux send-keys -t {self.tmux_name} {command} Enter')
 		output = prev_output
 		while output == prev_output:
-			output = self.get_log_file()
+			output = self.get_log()
 		os.system(f'tmux send-keys -t {self.tmux_name} Enter')
 		return output
 
 	def raw_command(self, command):
 		command = ' Space '.join(command.split(' '))
 		os.system(f'tmux send-keys -t {self.tmux_name} {command} Enter')
-		output = self.get_log_file()
+		output = self.get_log()
 		return output
 
 	def get_player_amount(self):
@@ -66,15 +65,15 @@ class ServerHook:
 	def test_block(self, pos = [0,0,0], block_test = 'minecraft:air'):
 		self.raw_command('execute if block {} {} {} {} run summon minecraft:polar_bear 0 -200 0'.format(pos[0], pos[1], pos[2], block_test))
 		self.raw_command('execute unless block {} {} {} {} run summon minecraft:bat 0 -200 0'.format(pos[0], pos[1], pos[2], block_test))
-		output = self.get_log_file()
+		output = self.get_log()
 		prev_output = [output, False, False]
 		while prev_output[1] == False:
-			output = self.get_log_file()	
+			output = self.get_log()	
 			if 'Summoned new ' in output and prev_output[1] == False:
 				prev_output[1] = True
 		os.system(f'tmux send-keys -t {self.tmux_name} Enter')
 		while prev_output[2] == False:
-			i = self.get_log_file()
+			i = self.get_log()
 			if '[HERE]' in i and prev_output[2] == False:
 				prev_output[2] = True
 		if output.split(': ')[1] == 'Summoned new Polar Bear':
@@ -84,3 +83,4 @@ class ServerHook:
 
 	def set_block(self, pos = [0,0,0], block = 'minecraft:stone'):
 		output = self.raw_command('setblock {} {} {} {}'.format(pos[0], pos[1], pos[2], block))
+		return output
