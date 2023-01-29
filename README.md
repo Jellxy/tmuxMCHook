@@ -2,6 +2,13 @@
 
 Manipulate a Minecraft Server using Python Code.
 
+## Installation
+
+tmuxMCHook can be installed easily using pip:
+
+```pip3 install git+https://github.com/Jellxy/tmuxMCHook```
+or
+```pip install git+https://github.com/Jellxy/tmuxMCHook```
 
 ## Usage
 
