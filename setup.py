@@ -6,5 +6,6 @@ setup(
     description = 'Manipulate Minecraft servers with Python code.',
     author = 'Jellxy',
     author_email = 'jellxyr@gmail.com',
-    url = 'https://github.com/Jellxy/tmuxMCHook'
+    url = 'https://github.com/Jellxy/tmuxMCHook',
+    packages = ['tmuxMCHook']
 )
